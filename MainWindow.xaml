@@ -133,8 +133,6 @@
                         </StackPanel.Resources>
                         <Separator Margin="5"/>
 
-                        <!--Kanske ba lösa det istället!-->
-
                         <DockPanel>
 
                             <Label Content="Datum: " Target="{Binding ElementName=effectiveDate}"/>
