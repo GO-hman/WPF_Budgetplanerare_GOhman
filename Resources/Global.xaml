@@ -3,41 +3,118 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             >
     <Style TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="Gray"/>
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#CED4DA"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#ADB5BD"/>
+
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="2">
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2">
                         <ContentPresenter HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       Margin="{TemplateBinding Padding}"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
+            
         </Setter>
     </Style>
     <Style TargetType="{x:Type Button}" x:Key="btnPrimary" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="#DEE2E6"/>
         <Setter Property="Foreground" Value="DarkBlue"/>
         <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Triggers>
+           
+        </Style.Triggers>
     </Style>
-    
+
     <Style TargetType="{x:Type Button}" x:Key="btnDanger" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="#DEE2E6"/>
         <Setter Property="Foreground" Value="DarkRed"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="Gray"/>
-                <Setter Property="Foreground" Value="LightGray"/>
+       
+    </Style>
 
+    <Style TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="#DEE2E6"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="BorderThickness" Value="2"/>
+    </Style>
+    <Style TargetType="{x:Type ListViewItem}">
+        <Setter Property="Foreground" Value="#212529"/>
+        <Style.Triggers >
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#ADB5BD"/>
+                <Setter Property="BorderBrush" Value="#ADB5BD"/>
+
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#CED4DA"/>
+                <Setter Property="BorderBrush" Value="#CED4DA"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="#ADB5BD"/>
+    </Style>
+    <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="Background" Value="#DEE2E6" />
+        <Setter Property="Foreground" Value="#212529" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
 
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="#DEE2E6"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="BorderThickness" Value="2"/>
+
+
+
+    </Style>
+    <Style TargetType="{x:Type DataGridCell}">
+    </Style>
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background" Value="#DEE2E6"/>
+        <Setter Property="Margin" Value="10 10 10 10"/>
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="MinWidth" Value="60"/>
+        <Setter Property="Foreground" Value="#212529"/>
+
+    </Style>
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="Background" Value="#DEE2E6"/>
+    </Style>
+
+    <Style TargetType="{x:Type Calendar}">
+        <Setter Property="Background" Value="#DEE2E6"/>
+    </Style>
+    <Style TargetType="{x:Type Label}">
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <Style TargetType="{x:Type TabPanel}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="{x:Type TabItem}">
+        <Setter Property="Height" Value="50"/>
+    </Style>
 
 </ResourceDictionary>

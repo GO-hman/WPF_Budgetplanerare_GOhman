@@ -47,7 +47,6 @@ namespace WPF_Budgetplanerare_GOhman.Data.Repositories
 
             return await dbContext.BudgetTransactions
                 .Include(t => t.RecurringRule)  
-                .Include(t => t.Category)
                 .Where(t => t.EffectiveDate >= start && t.EffectiveDate < end)
                 .ToListAsync();
         }

@@ -58,7 +58,7 @@ namespace WPF_Budgetplanerare_GOhman.Services
                     {
                         Amount = parentTransaction.Amount,
                         Note = parentTransaction.Note,
-                        Category = parentTransaction != null ? parentTransaction.Category : null,
+                        Category = parentTransaction.Category,
                         EffectiveDate = new DateTime(month.Year, month.Month, rule.StartDate.Day),
                         TransactionType = parentTransaction.TransactionType,
                         IsRecurring = true,
@@ -106,7 +106,8 @@ namespace WPF_Budgetplanerare_GOhman.Services
         }
         public async Task RemoveFromDatabase(Guid id)
         {
-            await transactionRepo.DeleteAsync(id);
+            if(await IsInDatabase(id)) 
+                await transactionRepo.DeleteAsync(id);
 
         }
 

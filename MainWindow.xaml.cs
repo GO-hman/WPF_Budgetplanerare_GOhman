@@ -22,7 +22,6 @@ namespace WPF_Budgetplanerare_GOhman
         {
             await viewModel.InitializeData();
         }
-     
     }
 
 

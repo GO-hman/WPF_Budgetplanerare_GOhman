@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WPF_Budgetplanerare_GOhman.Data;
 using WPF_Budgetplanerare_GOhman.Models;
 
 namespace WPF_Budgetplanerare_GOhman.ViewModels
@@ -43,7 +39,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             }
         }
 
-        public Category? Category
+        public CategoryEnum Category
         {
             get { return model.Category; }
             set
@@ -52,7 +48,6 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
                 RaisePropertyChanged();
             }
         }
-        public string? CategoryName => Category?.Name;
 
         public TransactionType TransactionType
         {
@@ -86,7 +81,6 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
                     {
                         model.RecurringRule = new RecurringRule
                         {
-                            Amount = model.Amount,
                             Frequency = Frequency.Månadsvis,
                             StartDate = model.EffectiveDate
                         };
@@ -101,7 +95,5 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
         public bool IsNotRecurrence => !model.IsRecurrence;
         public bool IsRecurrence => model.IsRecurrence;
 
-        public bool IsRecurrenceAndRecurring => model.IsRecurrence && model.IsRecurring;
-        public bool IsRecurringButNotRecurrence => model.IsRecurring && !model.IsRecurrence;
     }
 }

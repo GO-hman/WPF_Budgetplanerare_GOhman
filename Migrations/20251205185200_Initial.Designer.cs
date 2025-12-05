@@ -12,8 +12,8 @@ using WPF_Budgetplanerare_GOhman.Data;
 namespace WPF_Budgetplanerare_GOhman.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251205171846_final-data-structure")]
-    partial class finaldatastructure
+    [Migration("20251205185200_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,8 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EffectiveDate")
                         .HasColumnType("datetime2");
@@ -57,8 +57,6 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("BudgetTransactions");
 
                     b.HasData(
@@ -66,18 +64,18 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Amount = 5000m,
-                            CategoryId = new Guid("d6666666-6666-6666-6666-666666666666"),
+                            Category = 6,
                             EffectiveDate = new DateTime(2025, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
-                            Note = "Lön",
+                            Note = "Övertid",
                             TransactionType = 0
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             Amount = 1200m,
-                            CategoryId = new Guid("d2222222-2222-2222-2222-222222222222"),
+                            Category = 2,
                             EffectiveDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = true,
@@ -89,7 +87,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             Amount = 800m,
-                            CategoryId = new Guid("d1111111-1111-1111-1111-111111111111"),
+                            Category = 0,
                             EffectiveDate = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -100,7 +98,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
                             Amount = 400m,
-                            CategoryId = new Guid("d3333333-3333-3333-3333-333333333333"),
+                            Category = 3,
                             EffectiveDate = new DateTime(2025, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -111,7 +109,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
                             Amount = 300m,
-                            CategoryId = new Guid("d2222222-2222-2222-2222-222222222222"),
+                            Category = 1,
                             EffectiveDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -122,18 +120,19 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             Amount = 200m,
-                            CategoryId = new Guid("d2222222-2222-2222-2222-222222222222"),
+                            Category = 2,
                             EffectiveDate = new DateTime(2025, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
-                            IsRecurring = false,
-                            Note = "Försäkring",
+                            IsRecurring = true,
+                            Note = "Hemförsäkring",
+                            RecurringRuleId = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
                             TransactionType = 1
                         },
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
                             Amount = 1500m,
-                            CategoryId = new Guid("d8888888-8888-8888-8888-888888888888"),
+                            Category = 8,
                             EffectiveDate = new DateTime(2025, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -144,7 +143,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("88888888-8888-8888-8888-888888888888"),
                             Amount = 600m,
-                            CategoryId = new Guid("d4444444-4444-4444-4444-444444444444"),
+                            Category = 4,
                             EffectiveDate = new DateTime(2025, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -155,7 +154,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
                             Amount = 1000m,
-                            CategoryId = new Guid("d2222222-2222-2222-2222-222222222222"),
+                            Category = 9,
                             EffectiveDate = new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = false,
@@ -166,7 +165,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         {
                             Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             Amount = 2500m,
-                            CategoryId = new Guid("d6666666-6666-6666-6666-666666666666"),
+                            Category = 9,
                             EffectiveDate = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsRecurrence = false,
                             IsRecurring = true,
@@ -192,56 +191,6 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d1111111-1111-1111-1111-111111111111"),
-                            Name = "Mat",
-                            TransactionType = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d2222222-2222-2222-2222-222222222222"),
-                            Name = "Hus & drift",
-                            TransactionType = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d3333333-3333-3333-3333-333333333333"),
-                            Name = "Transport",
-                            TransactionType = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d4444444-4444-4444-4444-444444444444"),
-                            Name = "Fritid",
-                            TransactionType = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d5555555-5555-5555-5555-555555555555"),
-                            Name = "Streaming-tjänster",
-                            TransactionType = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d6666666-6666-6666-6666-666666666666"),
-                            Name = "Lön/Övertid",
-                            TransactionType = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("d7777777-7777-7777-7777-777777777777"),
-                            Name = "Bidrag",
-                            TransactionType = 0
-                        },
-                        new
-                        {
-                            Id = new Guid("d8888888-8888-8888-8888-888888888888"),
-                            Name = "Hobbyverksamhet",
-                            TransactionType = 0
-                        });
                 });
 
             modelBuilder.Entity("WPF_Budgetplanerare_GOhman.Models.RecurrenceException", b =>
@@ -295,7 +244,7 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            Amount = 1200m,
+                            Amount = 0m,
                             BudgetTransactionId = new Guid("22222222-2222-2222-2222-222222222222"),
                             Frequency = 0,
                             StartDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -303,22 +252,19 @@ namespace WPF_Budgetplanerare_GOhman.Migrations
                         new
                         {
                             Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                            Amount = 2500m,
+                            Amount = 0m,
                             BudgetTransactionId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             Frequency = 1,
                             StartDate = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            Amount = 0m,
+                            BudgetTransactionId = new Guid("66666666-6666-6666-6666-666666666666"),
+                            Frequency = 0,
+                            StartDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
-                });
-
-            modelBuilder.Entity("WPF_Budgetplanerare_GOhman.Models.BudgetTransaction", b =>
-                {
-                    b.HasOne("WPF_Budgetplanerare_GOhman.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("WPF_Budgetplanerare_GOhman.Models.RecurrenceException", b =>

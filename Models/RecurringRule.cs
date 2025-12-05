@@ -11,7 +11,6 @@ namespace WPF_Budgetplanerare_GOhman.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public decimal Amount { get; set; }
         public Frequency Frequency { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }

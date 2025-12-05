@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPF_Budgetplanerare_GOhman.Data;
 
 namespace WPF_Budgetplanerare_GOhman.Models
 {
@@ -20,9 +21,7 @@ namespace WPF_Budgetplanerare_GOhman.Models
         public string? Note { get; set; }
         public DateTime EffectiveDate { get; set; }
         public TransactionType TransactionType { get; set; }
-
-        public Guid CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public CategoryEnum Category { get; set; }
         public bool IsRecurring { get; set; }
 
         public bool IsRecurrence { get; set; } = false;

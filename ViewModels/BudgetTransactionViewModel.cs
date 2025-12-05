@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPF_Budgetplanerare_GOhman.Command;
 using WPF_Budgetplanerare_GOhman.Data;
 using WPF_Budgetplanerare_GOhman.Data.Repositories;
@@ -26,8 +27,12 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
         public DelegateCommand GenerateForecastCommand { get; }
 
         private ObservableCollection<BudgetTransactionItemViewModel> _budgetTransactions = new();
-        private ObservableCollection<Category> _categories = new();
 
+
+        public Array Categories { get; } = Enum.GetValues(typeof(CategoryEnum))
+                                                .Cast<CategoryEnum>()
+                                                .Where(c => c != CategoryEnum.Månadslön)
+                                                .ToArray();
 
         public Array TransactionTypes { get; } = Enum.GetValues(typeof(TransactionType));
         public Array RecurrenceOptions { get; } = Enum.GetValues(typeof(Frequency));
@@ -44,7 +49,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             this.dbContext = dbContext;
             this.transactionService = transactionService;
             AddCommand = new DelegateCommand(AddTransaction);
-            DeleteCommand = new DelegateCommand(DeleteTransaction, CanDelete);
+            DeleteCommand = new DelegateCommand(DeleteTransactionConfirmation, CanDelete);
             SaveCommand = new DelegateCommand(SaveTransaction);
             AbortCommand = new DelegateCommand(AbortTransaction);
             CalculateBudgetCommand = new DelegateCommand(CalculateBudget);
@@ -60,7 +65,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             var current = new DateTime(start.Year, start.Month, 1);
             MonthlyForecastTotals.Clear();
 
-            while(current <= end)
+            while (current <= end)
             {
                 dateTimes.Add(current);
                 current = current.AddMonths(1);
@@ -76,7 +81,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
                 {
                     var monthTransaction = new BudgetTransactionItemViewModel(transaction);
 
-                    if(monthTransaction.TransactionType == TransactionType.Inkomst)
+                    if (monthTransaction.TransactionType == TransactionType.Inkomst)
                     {
                         monthIncomes += monthTransaction.Amount;
                     }
@@ -134,16 +139,6 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             set
             {
                 _monthlyTotals = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ObservableCollection<Category> Categories
-        {
-            get { return _categories; }
-            set
-            {
-                _categories = value;
                 RaisePropertyChanged();
             }
         }
@@ -241,7 +236,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
                 {
                     EditableBudgetTransaction = Clone(this);
 
-                        IsExpanderExpanded = true;
+                    IsExpanderExpanded = true;
                 }
                 else
                 {
@@ -272,10 +267,18 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
         }
 
 
-
         private bool CanDelete(object? parameter) => SelectedBudgetTransaction is not null;
-
-        private async void DeleteTransaction(object? parameter)
+        private void DeleteTransactionConfirmation(object? parameter)
+        {
+            MessageBoxResult result = MessageBox.Show("Vill du ta bort den här transaktionen?",
+                                                      "Ta bort?",
+                                                      MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                DeleteTransaction();
+            }
+        }
+        private async void DeleteTransaction()
         {
             if (SelectedBudgetTransaction is not null)
             {
@@ -299,20 +302,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
 
         public async Task InitializeData()
         {
-            await GetCategories();
             await LoadMonthlyTransactionsAsync(SelectedDate);
-
-        }
-
-        public async Task GetCategories()
-        {
-            var categories = await dbContext.Categories.ToListAsync();
-            Categories.Clear();
-
-            foreach (var category in categories)
-            {
-                Categories.Add(category);
-            }
         }
 
         public async Task LoadMonthlyTransactionsAsync(DateTime date)
@@ -335,7 +325,6 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             decimal expenses = BudgetTransactions.Where(tx => tx.TransactionType == TransactionType.Utgift).Sum(tx => tx.Amount);
             MonthlyTotals = incomes - expenses;
         }
-
         public void AddTransaction(object? parameter)
         {
             SelectedBudgetTransaction = null;
@@ -343,7 +332,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             {
                 Id = Guid.NewGuid(),
                 Amount = 0,
-                Category = Categories.FirstOrDefault() ?? null,
+                Category = CategoryEnum.Mat,
                 TransactionType = TransactionType.Utgift,
                 EffectiveDate = SelectedDate,
                 IsRecurring = false,
@@ -380,21 +369,18 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
 
             decimal hourlyRate = YearlyIncome / (WorkhoursPerYear);
             decimal monthlyIncome = Math.Round(YearlyIncome / 12, 2);
+            var guid = Guid.Parse("DB9D435E-144A-40F8-8B8F-B9A46D6688FE");
 
             BudgetTransaction budgetTransaction = new BudgetTransaction
             {
-                Id = Guid.NewGuid(),
+                Id = guid,
                 Amount = monthlyIncome,
-                Category = new Category{
-                    Name = "Månadslön",
-                    TransactionType = TransactionType.Inkomst
-                    
-                },
+                Note = "Friberg-Codecademy",
+                Category = CategoryEnum.Månadslön,
                 EffectiveDate = new DateTime(2020, 1, 25),
                 IsRecurring = true,
                 RecurringRule = new RecurringRule
                 {
-                    Amount = monthlyIncome,
                     Frequency = Frequency.Månadsvis,
                     StartDate = new DateTime(2020, 1, 25)
                 }
@@ -402,6 +388,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
 
             try
             {
+                await transactionService.RemoveFromDatabase(guid);
                 await transactionService.AddOrUpdateTransactionAsync(budgetTransaction);
                 await LoadMonthlyTransactionsAsync(SelectedDate);
                 SelectedBudgetTransaction = null;

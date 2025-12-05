@@ -10,70 +10,12 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!--TODO: Move to global.xaml later. Just for testing now-->
-        <Style TargetType="{x:Type ListView}">
-            <Setter Property="Background" Value="#DEE2E6"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="BorderThickness" Value="2"/>
-        </Style>
-        <Style TargetType="{x:Type TabControl}">
-            <Setter Property="Background" Value="#ADB5BD"/>
-        </Style>
-        <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Background" Value="#DEE2E6" />
-            <Setter Property="Foreground" Value="#212529" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
 
-        <Style TargetType="{x:Type DataGrid}">
-            <Setter Property="Background" Value="#DEE2E6"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="BorderThickness" Value="2"/>
-
-
-
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}">
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background" Value="#DEE2E6"/>
-            <Setter Property="Margin" Value="10 10 10 10"/>
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="MinWidth" Value="60"/>
-            <Setter Property="Foreground" Value="#212529"/>
-
-        </Style>
-        <Style TargetType="{x:Type DataGridRow}">
-            <Setter Property="Background" Value="#DEE2E6"/>
-        </Style>
-        <!--<Style TargetType="{x:Type Expander}">
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>-->
-        <Style TargetType="{x:Type Calendar}">
-            <Setter Property="Background" Value="#DEE2E6"/>
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Padding" Value="5"/>
-        </Style>
     </Window.Resources>
     <TabControl TabStripPlacement="Left"
                 SelectedIndex="{Binding SelectedTabIndex}">
 
-        <TabControl.Resources>
-            <Style TargetType="TabPanel">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-
-            </Style>
-            <Style TargetType="TabItem">
-                <Setter Property="Height" Value="50"/>
-                <!--<Setter Property="Width" Value="40"/>-->
-            </Style>
-        </TabControl.Resources>
-        <TabItem Header="MainWindow">
+        <TabItem Header="Transaktioner">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"></RowDefinition>
@@ -91,10 +33,15 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel VerticalAlignment="Center" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2"
+                <StackPanel VerticalAlignment="Center" 
+                            Grid.Column="3" 
+                            Grid.Row="1" 
+                            Grid.ColumnSpan="2"
+                            Margin="0 0 0 10"
                             HorizontalAlignment="Center">
                     <Button Style="{StaticResource btnPrimary}" 
                             Command="{Binding AddCommand}">
+                        
                         Lägg till ny transaktion
                     </Button>
                     <Button  Style="{StaticResource btnDanger}"
@@ -117,17 +64,18 @@
                           Grid.Column="1"
                           Grid.ColumnSpan="2"  
                           SelectedItem="{Binding SelectedBudgetTransaction}" 
-                          d:ItemsSource="{d:SampleData ItemCount=5}"
-                          >
+                          Panel.ZIndex="2000"
+                          d:ItemsSource="{d:SampleData ItemCount=5}">
 
                     <ListView.Resources>
+
                         <CollectionViewSource x:Key="GroupedTransactions"
                                               Source="{Binding BudgetTransactions}">
                             <CollectionViewSource.GroupDescriptions>
-                                <PropertyGroupDescription PropertyName="Category.Name"/>
+                                <PropertyGroupDescription PropertyName="Category"/>
                             </CollectionViewSource.GroupDescriptions>
                             <CollectionViewSource.SortDescriptions>
-                                <scm:SortDescription PropertyName="Category.Name" Direction="Ascending"/>
+                                <scm:SortDescription PropertyName="Category" Direction="Ascending"/>
                             </CollectionViewSource.SortDescriptions>
                         </CollectionViewSource>
                     </ListView.Resources>
@@ -137,7 +85,7 @@
                     </ListView.ItemsSource>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Anteckning" Width="120"
+                            <GridViewColumn Header="Anteckning" Width="150"
                                             DisplayMemberBinding="{Binding Note}"/>
                             <GridViewColumn Header="Belopp" Width="100"
                                     DisplayMemberBinding="{Binding Amount}"/>
@@ -183,38 +131,40 @@
                                 <Setter Property="FontWeight" Value="Bold"/>
                             </Style>
                         </StackPanel.Resources>
+                        <Separator Margin="5"/>
+
+                        <!--Kanske ba lösa det istället!-->
+
                         <DockPanel>
 
                             <Label Content="Datum: " Target="{Binding ElementName=effectiveDate}"/>
                             <DatePicker x:Name="effectiveDate" Margin="5"
-                                    Text="{Binding Path=EditableBudgetTransaction.EffectiveDate, Mode=TwoWay, StringFormat={}{0:yyyy-MM-dd}}"/>
+                                        Text="{Binding Path=EditableBudgetTransaction.EffectiveDate, Mode=TwoWay, StringFormat={}{0:yyyy-MM-dd}}"/>
                         </DockPanel>
 
                         <DockPanel>
                             <Label Content="Belopp: " Target="{Binding ElementName=amount}"/>
                             <TextBox x:Name="amount" Margin="5"
-                     Text="{Binding Path=EditableBudgetTransaction.Amount, Mode=TwoWay}"/>
+                                     Text="{Binding Path=EditableBudgetTransaction.Amount, Mode=TwoWay}"/>
                         </DockPanel>
                         <DockPanel>
                             <Label Content="Anteckning: " Target="{Binding ElementName=note}"/>
                             <TextBox x:Name="note" Margin="5"
-                     Text="{Binding Path=EditableBudgetTransaction.Note, Mode=TwoWay}"/>
+                                     Text="{Binding Path=EditableBudgetTransaction.Note, Mode=TwoWay}"/>
                         </DockPanel>
                         <DockPanel>
                             <Label Content="Kategori: " Target="{Binding ElementName=category}"/>
                             <ComboBox x:Name="category" Margin="5"
-                      Grid.Column="3" 
-                      RenderTransformOrigin="1.087,-0.255"
-                      ItemsSource="{Binding Categories}"
-                      DisplayMemberPath="Name"
-                      SelectedItem="{Binding Path=EditableBudgetTransaction.Category, Mode=TwoWay}"/>
+                                      Grid.Column="3" 
+                                      ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding Path=EditableBudgetTransaction.Category, Mode=TwoWay}"/>
                         </DockPanel>
                         <DockPanel>
                             <Label Content="Inkomst/Utgift: " Target="{Binding ElementName=category}"/>
 
                             <ComboBox ItemsSource="{Binding TransactionTypes}"
-                      SelectedItem="{Binding Path=EditableBudgetTransaction.TransactionType, Mode=TwoWay}"
-                      Margin="5"/>
+                                      SelectedItem="{Binding Path=EditableBudgetTransaction.TransactionType, Mode=TwoWay}"
+                                      Margin="5"/>
                         </DockPanel>
                         <Separator Margin="5"/>
 
@@ -227,6 +177,13 @@
                                   IsEnabled="{Binding Path=SelectedBudgetTransaction.IsNotRecurrence}"
                                   Template="{DynamicResource ExpanderOverride}">
                             <StackPanel>
+                                <Label Width="auto"
+                                       HorizontalAlignment="Center"
+                                       Visibility="{Binding EditableBudgetTransaction.IsRecurrence, Converter={StaticResource BoolToVis}}"
+                                       Foreground="DarkRed"
+                                       Content=" Detta är en återkommande transaktion&#10;Välj originaltransaktion för att redigera">
+
+                                </Label>
                                 <DockPanel>
                                     <Label Content="Intervall: " />
                                     <ComboBox Margin="5"
@@ -240,12 +197,7 @@
                             </StackPanel>
 
                         </Expander>
-                        <Label Width="auto"
-                               HorizontalAlignment="Center"
-                               Visibility="{Binding SelectedBudgetTransaction.IsRecurrence, Converter={StaticResource BoolToVis}}"
-                               Foreground="DarkRed">
-                            Detta kommer ändra alla instanser av denna transaktion
-                        </Label>
+
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <Button Style="{StaticResource btnPrimary}"
                                     Command="{Binding SaveCommand}">Spara</Button>

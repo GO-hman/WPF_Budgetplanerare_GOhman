@@ -21,16 +21,15 @@ namespace WPF_Budgetplanerare_GOhman
 
 
             Resources.MergedDictionaries.Add(
-             new ResourceDictionary
-             {
-                 Source = new Uri("Resources/Global.xaml", UriKind.Relative)
-             });
-
+            new ResourceDictionary
+            {
+                Source = new Uri("Resources/Global.xaml", UriKind.Relative)
+            });
 
             var services = new ServiceCollection();
 
             ConfigureServices(services);
-           
+
             _serviceProvider = services.BuildServiceProvider();
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
@@ -44,7 +43,6 @@ namespace WPF_Budgetplanerare_GOhman
             services.AddSingleton<MainWindow>();
 
             services.AddScoped<IBudgetTransactionRepository, BudgetTransactionRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IRecurringRuleRepository, RecurringRuleRepository>();
             services.AddScoped<BudgetTransactionViewModel>();
             services.AddScoped<ApplicationDbContext>();
