@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 using WPF_Budgetplanerare_GOhman.Data;
 using WPF_Budgetplanerare_GOhman.Data.Repositories;

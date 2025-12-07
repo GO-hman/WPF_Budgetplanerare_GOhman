@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using WPF_Budgetplanerare_GOhman.Data;
 using WPF_Budgetplanerare_GOhman.ViewModels;
 
@@ -23,6 +24,4 @@ namespace WPF_Budgetplanerare_GOhman
             await viewModel.InitializeData();
         }
     }
-
-
 }

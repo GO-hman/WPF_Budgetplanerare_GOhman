@@ -234,7 +234,7 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
                 DeleteCommand.RaiseCanExecuteChanged();
                 if (value != null)
                 {
-                    EditableBudgetTransaction = Clone(this);
+                    EditableBudgetTransaction = Clone(value);
 
                     IsExpanderExpanded = true;
                 }
@@ -258,12 +258,21 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
             }
         }
 
-        public BudgetTransactionItemViewModel Clone(BudgetTransactionViewModel source)
+        public BudgetTransactionItemViewModel Clone(BudgetTransactionItemViewModel source)
         {
-            if (source.SelectedBudgetTransaction is null)
-                return null;
-            var clone = new BudgetTransactionItemViewModel(SelectedBudgetTransaction.Model);
-            return clone;
+            var clone = new BudgetTransaction()
+            {
+                Id = source.Id,
+                Amount = source.Amount,
+                Category = source.Category,
+                EffectiveDate = source.EffectiveDate,
+                IsRecurrence = source.IsRecurrence,
+                IsRecurring = source.IsRecurring,
+                Note = source.Note,
+                RecurringRule = source.RecurringRule,
+                TransactionType = source.TransactionType
+            };
+            return new BudgetTransactionItemViewModel(clone);
         }
 
 
@@ -346,11 +355,20 @@ namespace WPF_Budgetplanerare_GOhman.ViewModels
         {
             if (EditableBudgetTransaction is null)
                 return;
+            BudgetTransaction model;
 
-            var model = EditableBudgetTransaction.Model;
+            model = EditableBudgetTransaction.Model;
+
             try
             {
-                await transactionService.AddOrUpdateTransactionAsync(model);
+                if (model.IsRecurrence)
+                {
+                    await transactionService.UpdateByRecurrence(model);
+                }
+                else
+                {
+                    await transactionService.AddOrUpdateTransactionAsync(model);
+                }
                 await LoadMonthlyTransactionsAsync(SelectedDate);
                 SelectedBudgetTransaction = null;
                 EditableBudgetTransaction = null;

@@ -51,6 +51,7 @@ namespace WPF_Budgetplanerare_GOhman.Data.Repositories
 
             var monthly = await dbContext.RecurringRules
                 .Include(t => t.BudgetTransaction)
+                .Include(e=>e.RecurrenceExceptions)
                 .Where(r => r.StartDate <= end && (r.EndDate == null || r.EndDate >= start))
                 .Where(r => r.Frequency != Frequency.Årsvis
                          || r.BudgetTransaction.EffectiveDate.Month == month.Month)

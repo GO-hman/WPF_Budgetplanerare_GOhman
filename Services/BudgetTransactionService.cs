@@ -53,13 +53,14 @@ namespace WPF_Budgetplanerare_GOhman.Services
                 if (!exist)
                 {
                     var parentTransaction = await transactionRepo.GetByIdAsync(rule.BudgetTransactionId);
+                    int safeDay = Math.Min(rule.StartDate.Day, DateTime.DaysInMonth(month.Year, month.Month));
 
                     var newTransaction = new BudgetTransaction
                     {
                         Amount = parentTransaction.Amount,
                         Note = parentTransaction.Note,
                         Category = parentTransaction.Category,
-                        EffectiveDate = new DateTime(month.Year, month.Month, rule.StartDate.Day),
+                        EffectiveDate = new DateTime(month.Year, month.Month, safeDay),
                         TransactionType = parentTransaction.TransactionType,
                         IsRecurring = true,
                         IsRecurrence = true,
@@ -79,29 +80,27 @@ namespace WPF_Budgetplanerare_GOhman.Services
             return transaction != null;
         }
 
+        public async Task UpdateByRecurrence(BudgetTransaction budgetTransaction)
+        {
+            var originalTransaction = await transactionRepo.GetByIdAsync(budgetTransaction.RecurringRule.BudgetTransactionId);
+            originalTransaction.Amount = budgetTransaction.Amount;
+            originalTransaction.Note = budgetTransaction.Note;
+            originalTransaction.Category = budgetTransaction.Category;
+            originalTransaction.TransactionType = budgetTransaction.TransactionType;
+
+            await AddOrUpdateTransactionAsync(originalTransaction);
+        }
+
         public async Task AddOrUpdateTransactionAsync(BudgetTransaction budgetTransaction)
         {
             var existing = await IsInDatabase(budgetTransaction.Id);
             if(existing == false)
             {
                 await transactionRepo.AddAsync(budgetTransaction);
-
             }
             else
             {
                 await transactionRepo.UpdateAsync(budgetTransaction);
-                if(budgetTransaction.IsRecurring && budgetTransaction.RecurringRule != null)
-                {
-                    var existingRule = await recurringRuleRepo.GetByIdAsync(budgetTransaction.RecurringRule.Id);
-                    if(existingRule == null)
-                    {
-                        await recurringRuleRepo.AddAsync(budgetTransaction.RecurringRule);
-                    }
-                    else
-                    {
-                        await recurringRuleRepo.UpdateAsync(budgetTransaction.RecurringRule);
-                    }
-                }
             }
         }
         public async Task RemoveFromDatabase(Guid id)

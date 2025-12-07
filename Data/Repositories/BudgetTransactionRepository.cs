@@ -26,7 +26,6 @@ namespace WPF_Budgetplanerare_GOhman.Data.Repositories
         public async Task DeleteAsync(Guid id)
         {
             dbContext.BudgetTransactions.Remove(dbContext.BudgetTransactions.First(bt => bt.Id == id));
-            dbContext.RecurringRules.RemoveRange(dbContext.RecurringRules.Where(r => r.BudgetTransactionId == id));
             await dbContext.SaveChangesAsync();
         }
 
@@ -51,27 +50,30 @@ namespace WPF_Budgetplanerare_GOhman.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(BudgetTransaction tx)
+        public async Task UpdateAsync(BudgetTransaction budgetTransaction)
         {
-            var existing = await dbContext.BudgetTransactions.Include(r=>r.RecurringRule).FirstOrDefaultAsync(bt => bt.Id == tx.Id);
-            if (tx != null && existing != null)
+            var existing = await dbContext.BudgetTransactions.Include(r=>r.RecurringRule).FirstOrDefaultAsync(bt => bt.Id == budgetTransaction.Id);
+            if (budgetTransaction != null && existing != null)
             {
-                dbContext.Entry(existing).CurrentValues.SetValues(tx);
-                if (tx.IsRecurring && tx.RecurringRule != null)
+                if (budgetTransaction.IsRecurring && budgetTransaction.RecurringRule != null)
                 {
                     var existingRule = await dbContext.RecurringRules
-                        .FirstOrDefaultAsync(r => r.Id == tx.RecurringRule.Id);
+                        .FirstOrDefaultAsync(r => r.Id == budgetTransaction.RecurringRule.Id);
 
                     if (existingRule != null)
                     {
-                        dbContext.Entry(existingRule).CurrentValues.SetValues(tx.RecurringRule);
+                        dbContext.Entry(existingRule).CurrentValues.SetValues(budgetTransaction.RecurringRule);
                     }
                     else
                     {
-                        dbContext.RecurringRules.Add(tx.RecurringRule);
+                        existing.RecurringRule = budgetTransaction.RecurringRule;
                     }
                 }
-
+                if(!budgetTransaction.IsRecurring && existing.RecurringRule != null)
+                {
+                    dbContext.RecurringRules.Remove(existing.RecurringRule);
+                }
+                dbContext.Entry(existing).CurrentValues.SetValues(budgetTransaction);
                 await dbContext.SaveChangesAsync();
             }
         }
